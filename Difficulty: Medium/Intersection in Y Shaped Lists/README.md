@@ -1,10 +1,104 @@
-<h2><a href="https://www.geeksforgeeks.org/problems/intersection-point-in-y-shapped-linked-lists/1">Intersection in Y Shaped Lists</a></h2><h3>Difficulty Level : Difficulty: Medium</h3><hr><div class="problems_problem_content__Xm_eO"><p><span style="font-size: 18px;">You are given the heads of two non-empty singly linked lists, <strong>head1</strong> and <strong>head2</strong>, that intersect at a certain point. Return that <strong>Node </strong>where these two linked lists <strong>intersect</strong>.</span></p>
-<p><span style="font-size: 18px;"><strong>Note:</strong>&nbsp;</span><span style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-size: 18px;">It is guaranteed that the intersected node always exists.</span></p>
-<h3><span style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-size: 18px;">In the custom input you have to give input for CommonList which pointed at the end of both head1 and head2 to form a Y-shaped linked list.</span></h3>
-<p><strong style="font-size: 18px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">Examples:</strong></p>
-<pre><span style="font-size: 18px;"><strong>Input: </strong>head1: 10 -&gt; 15 -&gt; 30, head2: 3 -&gt; 6 -&gt; 9 -&gt; 15 -&gt; 30
-<strong>Output:</strong> 15
-<strong>Explanation: </strong>From the above image, it is clearly seen that the common part is 15 -&gt; 30, whose starting point is 15.<br>    <img src="https://media.geeksforgeeks.org/img-practice/prod/addEditProblem/906399/Web/Other/blobid2_1756127894.webp" width="473" height="137"><br></span></pre>
-<pre><span style="font-size: 18px;"><strong>Input: </strong>head1: 4 -&gt; 1 -&gt; 8 -&gt; 5, head2: 5 -&gt; 6 -&gt; 1 -&gt; 8 -&gt; 5<br><strong>Output: </strong>1
-<strong>Explanation: </strong>From the above image, it is clearly seen that the common part is 1 -&gt; 8 -&gt; 5, whose starting point is 1.<br>    <img src="https://media.geeksforgeeks.org/img-practice/prod/addEditProblem/906399/Web/Other/blobid0_1756127732.webp" width="514" height="149"></span></pre>
-<p><strong style="font-size: 18px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">Constraints:<br></strong><span style="font-size: 18px;">2 ≤ total number of nodes ≤ 2*10<sup>5</sup><br>-10<sup>4</sup> ≤ node-&gt;data ≤ 10<sup>4</sup></span></p></div><p><span style=font-size:18px><strong>Company Tags : </strong><br><code>VMWare</code>&nbsp;<code>Flipkart</code>&nbsp;<code>Accolite</code>&nbsp;<code>Amazon</code>&nbsp;<code>Microsoft</code>&nbsp;<code>Snapdeal</code>&nbsp;<code>D-E-Shaw</code>&nbsp;<code>FactSet</code>&nbsp;<code>MakeMyTrip</code>&nbsp;<code>Visa</code>&nbsp;<code>Goldman Sachs</code>&nbsp;<code>MAQ Software</code>&nbsp;<code>Adobe</code>&nbsp;<code>Qualcomm</code>&nbsp;<br><p><span style=font-size:18px><strong>Topic Tags : </strong><br><code>Linked List</code>&nbsp;<code>Data Structures</code>&nbsp;
+📌 Explaining unordered_map using Intersection of Y-Shaped Linked List (with diagram)
+🔹 What is unordered_map?
+
+unordered_map is a hash table–based data structure.
+
+Stores data in (key → value) form
+
+Search / Insert / Delete → average O(1)
+
+Order is not maintained
+
+👉 In this question:
+
+Key = Node* (address of node)
+
+Value = true / 1 (just a marker)
+
+🧠 Why unordered_map Here?
+
+We want to quickly check:
+
+“Has this node appeared in List-1 before?”
+
+Hashing gives us fast lookup.
+
+🪜 Step-by-Step Explanation (With Diagram)
+🧩 Given Y-Shaped Linked List
+List 1: 10 → 20 → 30
+                      ↘
+                        50 → 60 → NULL
+                      ↗
+List 2:       15 → 25
+
+
+👉 Intersection point = node 50
+
+🔸 Step 1: Traverse List-1 and store in unordered_map
+
+We store addresses, not values.
+
+unordered_map<Node*, bool> mp;
+
+Hash Map After List-1 Traversal
+Key (Node Address)     Value
+------------------------------
+addr(10)   ----------> true
+addr(20)   ----------> true
+addr(30)   ----------> true
+addr(50)   ----------> true
+addr(60)   ----------> true
+
+
+📌 Visually (Hash Table Concept)
+
+[ Hash Table ]
+   |
+   |--> addr(10) : true
+   |--> addr(20) : true
+   |--> addr(30) : true
+   |--> addr(50) : true
+   |--> addr(60) : true
+
+🔸 Step 2: Traverse List-2 and check in map
+Traversal of List-2
+15 → 25 → 50 → 60
+
+
+15 → ❌ not found in map
+
+25 → ❌ not found
+
+50 → ✅ FOUND in map
+
+🎯 Intersection detected at node 50
+
+🔸 Step 3: Return the intersection node
+return node(50);
+
+🧾 Code (For Reference)
+Node* intersectPoint(Node* head1, Node* head2) {
+    unordered_map<Node*, bool> mp;
+
+    Node* temp = head1;
+    while (temp != NULL) {
+        mp[temp] = true;
+        temp = temp->next;
+    }
+
+    temp = head2;
+    while (temp != NULL) {
+        if (mp.find(temp) != mp.end()) {
+            return temp;
+        }
+        temp = temp->next;
+    }
+
+    return NULL;
+}
+
+⏱️ Complexity
+
+Time: O(n + m)
+
+Space: O(n)
